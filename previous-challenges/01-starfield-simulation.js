@@ -50,7 +50,7 @@ let count = 0
 
 function draw() {
   background(0);
-  translate(width / 2, height / 2)
+  translate(width / 2, height / 2) // isso daqui esta levando todas as estrelas para o meio da tela
   for (let index = 0; index < stars.length; index++) {
     const star = stars[index];
     star.move()
