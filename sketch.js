@@ -1,25 +1,134 @@
+
+// TODO - fazer um cubo a partir de uma forma geometrica
+
+class MyBox {
+  constructor(x, y, z, size) {
+    this.position = createVector(x, y, z)
+    this.size = size;
+  }
+
+  createBackFaceVertex() {
+    vertex(this.position.x, this.position.y, this.position.z)
+    vertex(this.position.x, this.position.y + this.size, this.position.z)
+    vertex(this.position.x + this.size, this.position.y + this.size, this.position.z)
+    vertex(this.position.x + this.size, this.position.y, this.position.z)
+  }
+
+  createFrontFaceVertex() {
+    vertex(this.position.x, this.position.y, this.position.z + this.size)
+    vertex(this.position.x, this.position.y + this.size, this.position.z + this.size)
+    vertex(this.position.x + this.size, this.position.y + this.size, this.position.z + this.size)
+    vertex(this.position.x + this.size, this.position.y, this.position.z + this.size)
+  }
+
+  createUnderFaceVertex() {
+    vertex(this.position.x, this.position.y + this.size, this.position.z + this.size)
+    vertex(this.position.x + this.size, this.position.y + this.size, this.position.z + this.size)
+    vertex(this.position.x + this.size, this.position.y + this.size, this.position.z)
+    vertex(this.position.x, this.position.y + this.size, this.position.z)
+  }
+
+  createLeftFaceVertex() {
+    vertex(this.position.x, this.position.y, this.position.z)
+    vertex(this.position.x, this.position.y, this.position.z + this.size)
+    vertex(this.position.x, this.position.y + this.size, this.position.z + this.size)
+    vertex(this.position.x, this.position.y + this.size, this.position.z)
+  }
+
+  createRightFaceVertex() {
+    vertex(this.position.x + this.size, this.position.y, this.position.z)
+    vertex(this.position.x + this.size, this.position.y, this.position.z + this.size)
+    vertex(this.position.x + this.size, this.position.y + this.size, this.position.z + this.size)
+    vertex(this.position.x + this.size, this.position.y + this.size, this.position.z)
+  }
+
+  createTopFaceVertex() {
+    vertex(this.position.x, this.position.y, this.position.z + this.size)
+    vertex(this.position.x + this.size, this.position.y, this.position.z + this.size)
+    vertex(this.position.x + this.size, this.position.y, this.position.z)
+    vertex(this.position.x, this.position.y, this.position.z)
+  }
+
+  show() 
+  {
+    beginShape(QUADS);
+    // this.createFrontFaceVertex()
+    // this.createBackFaceVertex()
+    this.createUnderFaceVertex()
+    // this.createLeftFaceVertex()
+    // this.createRightFaceVertex()
+    // this.createTopFaceVertex()
+    endShape();
+  }
+}
+
+var rotateAngle = 0.0;
+var myBox;
+
 function setup() {
-  createCanvas(600, 600, P2D);
-  background(0);
+  createCanvas(600, 600, WEBGL);
+  myBox = new MyBox(0, 0, 0, 100);
+}
+
+function createFaces(size, positions) {
+  beginShape(QUADS);
+  positions.forEach(position => {
+    vertex(size + position[0] * size,
+      size + position[1] * size,
+      size + position[2] * size);
+  });
+  endShape();
+}
+
+function mouseWheel(event) {
+  rotateAngle += event.delta;
+  return false; //to block page scrolling
 }
 
 function draw() {
-  loadPixels();
-  for (var x = 0; x < width; x++) {
-    for (var y = 0; y < height; y++) {
-      var a = map(x, 0, width, -2.5, 1.0);
-      var b = map(y, 0, height, -1.0, 1.0);
-      var ca = a;
-      var cb = b;
-      var n = 0;
-      while (abs(a + b) < 4 && n < 255) {
-        var tempA = a * a - b * b + ca;
-        b = 2 * a * b + cb;
-        a = tempA;
-        n++;
-      }
-      pixels[x + y * width] = color(n * 10 % 255, n * 5 % 255, n * 3 % 255);
-    }
-  }
-  updatePixels();
+  background(51);
+
+  rotateX(rotateAngle);
+  rotateY(rotateAngle);
+  // rotateZ(rotateAngle);
+
+  // noFill()
+  myBox.show()
+  // createFaces(50, [
+  //   // frente
+  //   [0, 0, 0],
+  //   [0, 1, 0],
+  //   [1, 1, 0],
+  //   [1, 0, 0],
+
+  //   // tras
+  //   [0, 0, 1],
+  //   [0, 1, 1],
+  //   [1, 1, 1],
+  //   [1, 0, 1],
+
+  //   // baixo
+  //   [0, 1, 1],
+  //   [1, 1, 1],
+  //   [1, 1, 0],
+  //   [0, 1, 0],
+
+  //   // esquerdo
+  //   [0, 0, 0],
+  //   [0, 0, 1],
+  //   [0, 1, 1],
+  //   [0, 1, 0],
+
+    // direito
+    // [1, 0, 0],
+    // [1, 0, 1],
+    // [1, 1, 1],
+    // [1, 1, 0],
+
+  //   // cima
+  //   [0, 0, 1],
+  //   [1, 0, 1],
+  //   [1, 0, 0],
+  //   [0, 0, 0],
+  // ]);
 }
